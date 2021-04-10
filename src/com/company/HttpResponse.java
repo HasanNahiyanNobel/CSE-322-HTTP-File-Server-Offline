@@ -25,10 +25,10 @@ public class HttpResponse {
 		statusMessage = "OK"; // TODO: Change this as needed.
 		html = convertHtmlPageToString(path);
 
-		headers += "Date: " + new Date().toString() + "\r\n";
-		//headers += "Server: Nobel PC\r\n";
-		headers += "Content-Type: text/html\r\n";
-		headers += "Content-Length: " + html.length();
+		headers = "Date: " + new Date().toString() + "\r\n" +
+				"Content-Type: text/html\r\n" +
+				"Content-Length: " + html.length() + "\r\n"+
+				"Connection: close";
 
 
 		String response = httpVersion + " " + statusCode + " " + statusMessage + "\r\n"
