@@ -23,6 +23,7 @@ public class Worker extends Thread {
 				if (scanner.hasNext()) {
 					String method = scanner.next();
 					String path = scanner.next();
+					path = path.substring(1); // Remove the slash at the beginning of the path
 					String httpVersion = scanner.next();
 					String header = "";
 					while (scanner.hasNext() && doWeNeedToScanHttpHeaders) {

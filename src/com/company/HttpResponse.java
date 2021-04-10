@@ -26,6 +26,7 @@ public class HttpResponse {
 
 		headers += "Date: " + new Date().toString() + "\n";
 		headers += "Server: Nobel PC\n";
+		headers += "\n";
 		headers += convertHtmlPageToString(path);
 
 
@@ -45,7 +46,7 @@ public class HttpResponse {
 			BufferedReader in = new BufferedReader(new FileReader(path));
 			String str;
 			while ((str = in.readLine()) != null) {
-				stringBuilder.append(str);
+				stringBuilder.append(str + "\n");
 			}
 			in.close();
 		} catch (IOException ioException) {

@@ -2,6 +2,11 @@ package com.company;
 
 public class Main {
 	public static void main(String[] args) {
-		System.out.println("Hello, Jude!");
+		HttpResponse httpResponse = new HttpResponse();
+
+		String path = "/index.html";
+		path = path.substring(1);
+
+		System.out.println(httpResponse.getResponse(path));
 	}
 }
