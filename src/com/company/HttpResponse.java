@@ -1,6 +1,7 @@
 package com.company;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
@@ -11,6 +12,13 @@ public class HttpResponse {
 	String statusMessage;
 	String headers;
 	String html;
+	final String errorHtmlString = "<!DOCTYPE html>\n" +
+			"<html>\n" +
+			"<body>\n" +
+			"<h1>Error 404</h1>\n" +
+			"<p>Page not found.</p>\n" +
+			"</body>\n" +
+			"</html>\n";
 
 	public HttpResponse () {
 		httpVersion = "HTTP/1.1";
@@ -21,10 +29,15 @@ public class HttpResponse {
 	}
 
 	public String getResponse (String path) {
-		statusCode = 200; // TODO: Change this as needed.
+		if (new File(path).exists()) {
+			statusCode = 200;
+			html = convertHtmlPageToString(path);
+		}
+		else {
+			statusCode = 404;
+			html = errorHtmlString;
+		}
 		statusMessage = getStatusMessageFromStatusCode(statusCode);
-
-		html = convertHtmlPageToString(path);
 
 		headers = "Date: " + new Date() + "\r\n" +
 				"Content-Type: text/html" + "\r\n" +
@@ -46,7 +59,7 @@ public class HttpResponse {
 	String convertHtmlPageToString (String path) {
 		StringBuilder stringBuilder = new StringBuilder();
 		try {
-			BufferedReader in = new BufferedReader(new FileReader("index.html")); // TODO: Change this to path
+			BufferedReader in = new BufferedReader(new FileReader(path)); // TODO: Change this to path
 			String str;
 			while ((str = in.readLine()) != null) {
 				stringBuilder.append(str + "\r\n");
