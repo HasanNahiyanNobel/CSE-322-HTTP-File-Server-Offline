@@ -23,14 +23,17 @@ public class HttpResponse {
 	public String getResponse (String path) {
 		statusCode = "200"; // TODO: Change this as needed.
 		statusMessage = "OK"; // TODO: Change this as needed.
+		html = convertHtmlPageToString(path);
 
-		headers += "Date: " + new Date().toString() + "\n";
-		headers += "Server: Nobel PC\n";
-		headers += "\n";
-		headers += convertHtmlPageToString(path);
+		headers += "Date: " + new Date().toString() + "\r\n";
+		//headers += "Server: Nobel PC\r\n";
+		headers += "Content-Type: text/html\r\n";
+		headers += "Content-Length: " + html.length();
 
 
-		String response = httpVersion + " " + statusCode + " " + statusMessage + "\n" + headers;
+		String response = httpVersion + " " + statusCode + " " + statusMessage + "\r\n"
+				+ headers + "\r\n\r\n"
+				+ html;
 
 		return response;
 	}
@@ -43,10 +46,10 @@ public class HttpResponse {
 	String convertHtmlPageToString (String path) {
 		StringBuilder stringBuilder = new StringBuilder();
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(path));
+			BufferedReader in = new BufferedReader(new FileReader("index.html")); // TODO: Change this to path
 			String str;
 			while ((str = in.readLine()) != null) {
-				stringBuilder.append(str + "\n");
+				stringBuilder.append(str + "\r\n");
 			}
 			in.close();
 		} catch (IOException ioException) {

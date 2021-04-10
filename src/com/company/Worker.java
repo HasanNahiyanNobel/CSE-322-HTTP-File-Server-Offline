@@ -2,6 +2,7 @@ package com.company;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
@@ -16,6 +17,7 @@ public class Worker extends Thread {
 	public void run() {
 		try {
 			ObjectOutputStream objectOutputStream = new ObjectOutputStream(this.socket.getOutputStream());
+			PrintWriter printWriter = new PrintWriter(this.socket.getOutputStream());
 
 			while (true) {
 				Scanner scanner = new Scanner(socket.getInputStream()); // From https://stackoverflow.com/a/35446009
@@ -30,7 +32,10 @@ public class Worker extends Thread {
 						header += scanner.next() + "\n";
 					}
 
-					objectOutputStream.writeObject(new HttpResponse().getResponse(path));
+					String response = new HttpResponse().getResponse(path);
+					System.out.println(response);
+					//printWriter.write(response);
+					//printWriter.flush();
 				}
 
 				Thread.sleep(1000);

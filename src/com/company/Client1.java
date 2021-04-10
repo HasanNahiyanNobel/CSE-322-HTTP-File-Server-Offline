@@ -7,7 +7,7 @@ import java.net.Socket;
 
 public class Client1 {
 	public static void main (String[] args) throws IOException, ClassNotFoundException {
-		Socket socket = new Socket("localhost", 6666);
+		Socket socket = new Socket("localhost", 8080);
 		System.out.println("Connection established");
 		System.out.println("Remote port: " + socket.getPort());
 		System.out.println("Local port: " + socket.getLocalPort());
