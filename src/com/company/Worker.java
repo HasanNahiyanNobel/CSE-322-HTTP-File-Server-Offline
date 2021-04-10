@@ -28,6 +28,8 @@ public class Worker extends Thread {
 					while (scanner.hasNext() && doWeNeedToScanHttpHeaders) {
 						header += scanner.next() + "\n";
 					}
+
+					objectOutputStream.writeObject(new HttpResponse().getResponse(path));
 				}
 
 				Thread.sleep(1000);
