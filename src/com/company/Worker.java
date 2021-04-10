@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 public class Worker extends Thread {
 	Socket socket;
+	boolean doWeNeedToScanHttpHeaders = false;
 
 	public Worker (Socket socket) {
 		this.socket = socket;
@@ -23,8 +24,10 @@ public class Worker extends Thread {
 					String method = scanner.next();
 					String path = scanner.next();
 					String httpVersion = scanner.next();
-					System.out.println("Method: " + method + ", Path: " + path);
-					System.out.println();
+					String header = "";
+					while (scanner.hasNext() && doWeNeedToScanHttpHeaders) {
+						header += scanner.next() + "\n";
+					}
 				}
 
 				Thread.sleep(1000);

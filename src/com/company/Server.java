@@ -11,7 +11,7 @@ public class Server {
 		while (true) {
 			System.out.println("Waiting for connection...");
 			Socket socket = welcomeSocket.accept();
-			System.out.println("Connection established.");
+			System.out.println("Connection established.\n");
 
 			// Open thread
 			Thread worker = new Worker(socket);
