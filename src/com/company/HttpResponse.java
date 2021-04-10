@@ -7,29 +7,29 @@ import java.util.Date;
 
 public class HttpResponse {
 	String httpVersion;
-	String statusCode;
+	int statusCode;
 	String statusMessage;
 	String headers;
 	String html;
 
 	public HttpResponse () {
 		httpVersion = "HTTP/1.1";
-		statusCode = "";
+		statusCode = 0;
 		statusMessage = "";
 		headers = "";
 		html = "";
 	}
 
 	public String getResponse (String path) {
-		statusCode = "200"; // TODO: Change this as needed.
-		statusMessage = "OK"; // TODO: Change this as needed.
+		statusCode = 200; // TODO: Change this as needed.
+		statusMessage = getStatusMessageFromStatusCode(statusCode);
+
 		html = convertHtmlPageToString(path);
 
-		headers = "Date: " + new Date().toString() + "\r\n" +
-				"Content-Type: text/html\r\n" +
+		headers = "Date: " + new Date() + "\r\n" +
+				"Content-Type: text/html" + "\r\n" +
 				"Content-Length: " + html.length() + "\r\n"+
 				"Connection: close";
-
 
 		String response = httpVersion + " " + statusCode + " " + statusMessage + "\r\n"
 				+ headers + "\r\n\r\n"
@@ -39,7 +39,7 @@ public class HttpResponse {
 	}
 
 	/**
-	 * From https://stackoverflow.com/a/12035403
+	 * Concept from: https://stackoverflow.com/a/12035403
 	 * @param path Path of the html file
 	 * @return The whole html file as a string
 	 */
@@ -56,5 +56,15 @@ public class HttpResponse {
 			System.out.println(ioException);
 		}
 		return stringBuilder.toString();
+	}
+
+	String getStatusMessageFromStatusCode (int statusCode) {
+		return switch (statusCode) {
+			case 200 -> "OK";
+			case 400 -> "Bad Request";
+			case 403 -> "Forbidden";
+			case 404 -> "Not Found";
+			default -> "";
+		};
 	}
 }
