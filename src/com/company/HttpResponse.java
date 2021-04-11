@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.Date;
 
 public class HttpResponse {
+	String rootDirectoryPath;
 	String httpVersion;
 	int statusCode;
 	String statusMessage;
@@ -14,20 +15,32 @@ public class HttpResponse {
 	String htmlString;
 	final String indexHtmlPath = "index.html";
 	final String errorHtmlPath = "error404.html";
+	final String errorHtmlString = "<!DOCTYPE html><html><body style=\"text-align: center; margin-bottom: 1em\">" +
+			"<h1>Error 404</h1>" +
+			"<p>Page not found.</p>" +
+			"</body></html>";
 
-	public HttpResponse () {
+	public HttpResponse (String rootDirectoryPath) {
+		this.rootDirectoryPath = rootDirectoryPath;
 		httpVersion = "HTTP/1.1";
 	}
 
 	public String getResponse (String path) {
-		path = "root/" + path;
-		if (new File(path).exists()) {
+		path = rootDirectoryPath + "/" + path;
+		File file = new File(path);
+		if (file.exists()) {
 			statusCode = 200;
-			htmlString = convertHtmlPageToString(indexHtmlPath);
+			if (file.isDirectory()) {
+				htmlString = new HtmlFileExplorer().getHtmlString(path);
+			}
+			else {
+				htmlString = convertHtmlPageToString(indexHtmlPath); // TODO: Change this to make download.
+			}
 		}
 		else {
 			statusCode = 404;
-			htmlString = convertHtmlPageToString(errorHtmlPath);
+			htmlString = errorHtmlString;
+			System.out.println("Error 404 for file path: " + file.getPath());
 		}
 		statusMessage = getStatusMessageFromStatusCode(statusCode);
 

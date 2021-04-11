@@ -32,7 +32,7 @@ public class Worker extends Thread {
 						header += scanner.next() + "\n";
 					}
 
-					String response = new HttpResponse().getResponse(path);
+					String response = new HttpResponse("root").getResponse(path); // TODO: Change the root string to variable.
 					System.out.println(response);
 					//printWriter.write(response);
 					//printWriter.flush();
