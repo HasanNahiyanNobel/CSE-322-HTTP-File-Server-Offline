@@ -1,8 +1,6 @@
 package com.company;
 
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 
 public class ClientWorker extends Thread {
@@ -16,6 +14,10 @@ public class ClientWorker extends Thread {
 
 	public void run () {
 		try {
+			// Write file name
+			PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+			printWriter.print(new File(filePath).getName() + "\n");
+			printWriter.flush();
 			// Write the file
 			DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 			FileInputStream fileInputStream = new FileInputStream(filePath);

@@ -22,9 +22,15 @@ public class Client {
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
 			try {
 				System.out.print("Please type request message: ");
-				String input = bufferedReader.readLine();
-				String command = input.split(" ")[0];
-				String filePath = input.split(" ")[1];
+				String[] inputs = bufferedReader.readLine().split(" ");
+
+				if (inputs.length!=2) {
+					System.out.println("Invalid number of arguments (expected 2).\n");
+					continue;
+				}
+
+				String command = inputs[0];
+				String filePath = inputs[1];
 				File fileToBeUploaded = new File(filePath);
 
 				if (!command.equals(UPLOAD_COMMAND)) {

@@ -30,7 +30,7 @@ public class ServerWorker extends Thread {
 				if (startLine!=null) {
 					// Check whether this is an upload request
 					if (!startLine.split(" ")[0].equals("GET")) {
-						System.out.println("An upload request came.");
+						letsHandleTheUploadRequest(startLine);
 						continue;
 					}
 
@@ -78,6 +78,23 @@ public class ServerWorker extends Thread {
 				}
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void letsHandleTheUploadRequest (String fileName) {
+		System.out.println("Upload request came, file name: " + fileName);
+		try {
+			// Read the file
+			DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
+			FileOutputStream fileOutputStream = new FileOutputStream(rootDirectoryPath+"/"+fileName);
+			byte[] buffer = new byte[1024];
+			while (dataInputStream.read(buffer) > 0) fileOutputStream.write(buffer);
+
+			dataInputStream.close();
+			fileOutputStream.flush();
+
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
