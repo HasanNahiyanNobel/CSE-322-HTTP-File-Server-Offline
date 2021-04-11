@@ -41,16 +41,20 @@ public class SimpleHttpServer {
 				}
 
 				String httpResponse = new HttpResponse(rootDirectoryPath).getResponse(path);
+				File file = new File(rootDirectoryPath + "/" + path);
 
-				if (httpResponse!=null) {
-					// Write the html page
+				if (!file.exists() || file.isDirectory()) {
+					// Write http headers and html page
 					PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
 					printWriter.print(httpResponse);
 					printWriter.close();
 				}
 				else {
+					// Write http headers
+					PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+					printWriter.print(httpResponse);
+					System.out.println(httpResponse);
 					// Write the file
-					File file = new File(rootDirectoryPath + "/" + path);
 					DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 					FileInputStream fileInputStream = new FileInputStream(file);
 					byte[] buffer = new byte[1024];
@@ -59,6 +63,7 @@ public class SimpleHttpServer {
 						dataOutputStream.write(buffer);
 					}
 
+					printWriter.close();
 					fileInputStream.close();
 					dataOutputStream.close();
 				}

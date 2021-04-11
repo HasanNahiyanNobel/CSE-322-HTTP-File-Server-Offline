@@ -14,6 +14,8 @@ public class HttpResponse {
 	String statusMessage;
 	String headers;
 	String mimeType;
+	String contentDisposition;
+	long contentLength;
 	String htmlString;
 	final String indexHtmlPath = "index.html";
 	final String errorHtmlPath = "error404.html";
@@ -36,21 +38,26 @@ public class HttpResponse {
 			if (file.isDirectory()) {
 				mimeType = "text/html";
 				htmlString = new HtmlFileExplorer().getHtmlString(path);
+				contentDisposition = "inline";
+				contentLength = htmlString.length();
 			}
 			else {
-				String extension = file.getName().split("\\.")[1];
 				try {
 					mimeType = Files.probeContentType(file.toPath());
 				} catch (IOException ex) {
 					ex.printStackTrace();
 				}
-				return null;
+				htmlString = ""; // A file will be sent
+				contentDisposition = "attachment";
+				contentLength = file.length();
 			}
 		}
 		else {
 			statusCode = 404;
 			mimeType = "text/html";
 			htmlString = errorHtmlString;
+			contentDisposition = "inline";
+			contentLength = htmlString.length();
 			System.out.println("Error 404 for file path: " + file.getPath());
 		}
 
@@ -58,8 +65,9 @@ public class HttpResponse {
 
 		headers = "Date: " + new Date() + "\r\n" +
 				"Content-Type: " + mimeType + "\r\n" +
-				"Content-Length: " + htmlString.length() + "\r\n"+
-				"Connection: close";
+				"Content-Disposition: " + contentDisposition + "\r\n" +
+				"Content-Length: " + contentLength + "\r\n"+
+				"Connection: open";
 
 		String response = httpVersion + " " + statusCode + " " + statusMessage + "\r\n"
 				+ headers + "\r\n\r\n"
