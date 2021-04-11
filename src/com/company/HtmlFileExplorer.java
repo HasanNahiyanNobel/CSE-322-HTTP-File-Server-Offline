@@ -21,7 +21,12 @@ public class HtmlFileExplorer {
 		}
 		else {
 			for (final File fileEntry : file.listFiles()) {
-				contents += fileEntry.getName() + "\n";
+				if (!fileEntry.isDirectory()) {
+					contents += fileEntry.getName() + "\n";
+				}
+				else {
+					contents += "<a href=\""+ fileEntry.getPath() + "\">" + fileEntry.getName() + "</a>\n";
+				}
 			}
 		}
 		return htmlStringBeforeContents + contents + htmlStringAfterContents;
