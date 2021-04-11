@@ -1,9 +1,6 @@
 package com.company;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 
 public class Client {
@@ -17,6 +14,8 @@ public class Client {
 		System.out.println("Connection established");
 		System.out.println("Remote port: " + socket.getPort());
 		System.out.println("Local port: " + socket.getLocalPort());
+
+		DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 
 		while (true) {
 			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
@@ -45,7 +44,7 @@ public class Client {
 					System.out.println("Uploading " + filePath + "...\n");
 				}
 
-				Thread clientWorker = new ClientWorker(socket, filePath);
+				Thread clientWorker = new ClientWorker(socket, filePath, dataOutputStream);
 				clientWorker.start();
 			} catch (IOException e) {
 				e.printStackTrace();
