@@ -1,9 +1,6 @@
 package com.company;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -43,11 +40,29 @@ public class SimpleHttpServer {
 					}
 				}
 
-				PrintWriter out = new PrintWriter(socket.getOutputStream());
 				String httpResponse = new HttpResponse(rootDirectoryPath).getResponse(path);
-				out.print(httpResponse);
 
-				out.close();
+				if (httpResponse!=null) {
+					// Write the html page
+					PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
+					printWriter.print(httpResponse);
+					printWriter.close();
+				}
+				else {
+					// Write the file
+					File file = new File(rootDirectoryPath + "/" + path);
+					DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+					FileInputStream fileInputStream = new FileInputStream(file);
+					byte[] buffer = new byte[1024];
+
+					while (fileInputStream.read(buffer) > 0) {
+						dataOutputStream.write(buffer);
+					}
+
+					fileInputStream.close();
+					dataOutputStream.close();
+				}
+
 				socket.close();
 			}
 		}

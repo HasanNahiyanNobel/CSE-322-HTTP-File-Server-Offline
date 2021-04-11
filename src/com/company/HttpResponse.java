@@ -33,9 +33,7 @@ public class HttpResponse {
 			if (file.isDirectory()) {
 				htmlString = new HtmlFileExplorer().getHtmlString(path);
 			}
-			else {
-				htmlString = convertHtmlPageToString(indexHtmlPath); // TODO: Change this to make download.
-			}
+			else return null; // Which is a signal that this is a file, and should be downloaded.
 		}
 		else {
 			statusCode = 404;
