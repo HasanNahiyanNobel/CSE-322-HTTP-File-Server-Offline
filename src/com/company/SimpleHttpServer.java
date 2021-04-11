@@ -13,6 +13,7 @@ import java.net.Socket;
 public class SimpleHttpServer {
 	public static void main (String[] args) throws IOException {
 		int port = 8080;
+		String rootDirectoryPath = "root";
 		boolean doWeNeedToScanHttpHeaders = false;
 
 		try {
@@ -36,8 +37,6 @@ public class SimpleHttpServer {
 				path = startLineContents[1].substring(1); // Substring taken to remove the prefix slash from path.
 				httpVersion = startLineContents[2];
 
-				System.out.println(path);
-
 				if (doWeNeedToScanHttpHeaders) {
 					for (String headerLine=bufferedReader.readLine(); headerLine!=null && headerLine.length()>0; headerLine=bufferedReader.readLine()) {
 						header += headerLine;
@@ -45,7 +44,7 @@ public class SimpleHttpServer {
 				}
 
 				PrintWriter out = new PrintWriter(socket.getOutputStream());
-				String httpResponse = new HttpResponse().getResponse(path);
+				String httpResponse = new HttpResponse(rootDirectoryPath).getResponse(path);
 				out.print(httpResponse);
 
 				out.close();
