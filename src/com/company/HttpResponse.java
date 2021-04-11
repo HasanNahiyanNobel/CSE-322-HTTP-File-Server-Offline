@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Date;
 
 public class HttpResponse {
@@ -12,6 +13,7 @@ public class HttpResponse {
 	int statusCode;
 	String statusMessage;
 	String headers;
+	String mimeType;
 	String htmlString;
 	final String indexHtmlPath = "index.html";
 	final String errorHtmlPath = "error404.html";
@@ -28,22 +30,34 @@ public class HttpResponse {
 	public String getResponse (String path) {
 		path = rootDirectoryPath + "/" + path;
 		File file = new File(path);
+
 		if (file.exists()) {
 			statusCode = 200;
 			if (file.isDirectory()) {
+				mimeType = "text/html";
 				htmlString = new HtmlFileExplorer().getHtmlString(path);
 			}
-			else return null; // Which is a signal that this is a file, and should be downloaded.
+			else {
+				String extension = file.getName().split("\\.")[1];
+				try {
+					mimeType = Files.probeContentType(file.toPath());
+				} catch (IOException ex) {
+					ex.printStackTrace();
+				}
+				return null;
+			}
 		}
 		else {
 			statusCode = 404;
+			mimeType = "text/html";
 			htmlString = errorHtmlString;
 			System.out.println("Error 404 for file path: " + file.getPath());
 		}
+
 		statusMessage = getStatusMessageFromStatusCode(statusCode);
 
 		headers = "Date: " + new Date() + "\r\n" +
-				"Content-Type: text/html" + "\r\n" +
+				"Content-Type: " + mimeType + "\r\n" +
 				"Content-Length: " + htmlString.length() + "\r\n"+
 				"Connection: close";
 
