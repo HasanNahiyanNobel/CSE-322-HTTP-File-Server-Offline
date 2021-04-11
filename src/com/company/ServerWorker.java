@@ -31,7 +31,7 @@ public class ServerWorker extends Thread {
 					// Check whether this is an upload request
 					if (!startLine.split(" ")[0].equals("GET")) {
 						letsHandleTheUploadRequest(startLine);
-						continue;
+						break; // Get out of this loop and handle incoming stuffs on a new thread.
 					}
 
 					String[] startLineContents = startLine.split(" ");
@@ -44,7 +44,7 @@ public class ServerWorker extends Thread {
 					request = startLine + "\n" + headers;
 				}
 				else {
-					break; // Get out of this loop and handle stuffs on a new thread.
+					break; // Get out of this loop and handle incoming stuffs on a new thread.
 				}
 
 				String httpResponse = new HttpResponse(rootDirectoryPath).getResponse(path);
@@ -89,7 +89,10 @@ public class ServerWorker extends Thread {
 			DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
 			FileOutputStream fileOutputStream = new FileOutputStream(rootDirectoryPath+"/"+fileName);
 			byte[] buffer = new byte[1024];
-			while (dataInputStream.read(buffer) > 0) fileOutputStream.write(buffer);
+			while (dataInputStream.available() > 0) {
+				dataInputStream.read(buffer);
+				fileOutputStream.write(buffer);
+			}
 
 			dataInputStream.close();
 			fileOutputStream.flush();
