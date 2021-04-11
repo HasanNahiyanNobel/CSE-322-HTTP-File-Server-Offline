@@ -26,15 +26,22 @@ public class Worker extends Thread {
 
 				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
-				String[] startLineContents = bufferedReader.readLine().split(" ");
-				method = startLineContents[0];
-				path = startLineContents[1].substring(1); // Substring taken to remove the prefix slash from path.
-				httpVersion = startLineContents[2];
+				String startLine = bufferedReader.readLine();
 
-				if (doWeNeedToScanHttpHeaders) {
-					for (String headerLine=bufferedReader.readLine(); headerLine!=null && headerLine.length()>0; headerLine=bufferedReader.readLine()) {
-						header += headerLine;
+				if (startLine!=null) {
+					String[] startLineContents = startLine.split(" ");
+					method = startLineContents[0];
+					path = startLineContents[1].substring(1); // Substring taken to remove the prefix slash from path.
+					httpVersion = startLineContents[2];
+
+					if (doWeNeedToScanHttpHeaders) {
+						for (String headerLine=bufferedReader.readLine(); headerLine!=null && headerLine.length()>0; headerLine=bufferedReader.readLine()) {
+							header += headerLine;
+						}
 					}
+				}
+				else {
+					break; // Get out of this loop and handle stuffs on a new thread.
 				}
 
 				String httpResponse = new HttpResponse(rootDirectoryPath).getResponse(path);
@@ -50,7 +57,6 @@ public class Worker extends Thread {
 					// Write http headers
 					PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
 					printWriter.print(httpResponse);
-					System.out.println(httpResponse); //TODO: Remove this debug line.
 					printWriter.flush();
 					// Write the file
 					DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
