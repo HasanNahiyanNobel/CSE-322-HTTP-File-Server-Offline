@@ -17,6 +17,7 @@ public class SimpleHttpServer {
 
 		try {
 			ServerSocket serverSocket = new ServerSocket(port);
+			//String localHostIP = serverSocket.getInetAddress().getLocalHost().toString().split("/")[1];
 
 			while (true) {
 				System.out.println("Waiting for a request...");

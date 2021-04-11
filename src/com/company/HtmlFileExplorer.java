@@ -25,7 +25,9 @@ public class HtmlFileExplorer {
 					contents += fileEntry.getName() + "<br>";
 				}
 				else {
-					contents += "<a href=\""+ fileEntry.getPath() + "\">" + fileEntry.getName() + "</a><br>";
+					int indexOfBackslash = fileEntry.getPath().indexOf('\\');
+					String relativePath = fileEntry.getPath().substring(indexOfBackslash+1); // Relative path from root directory
+					contents += "<a href=\"/"+ relativePath + "\">" + fileEntry.getName() + "</a><br>";
 				}
 			}
 		}
