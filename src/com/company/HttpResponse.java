@@ -11,42 +11,34 @@ public class HttpResponse {
 	int statusCode;
 	String statusMessage;
 	String headers;
-	String html;
-	final String errorHtmlString = "<!DOCTYPE html>\n" +
-			"<html>\n" +
-			"<body>\n" +
-			"<h1>Error 404</h1>\n" +
-			"<p>Page not found.</p>\n" +
-			"</body>\n" +
-			"</html>\n";
+	String htmlString;
+	final String indexHtmlPath = "index.html";
+	final String errorHtmlPath = "error_404.html";
 
 	public HttpResponse () {
 		httpVersion = "HTTP/1.1";
-		statusCode = 0;
-		statusMessage = "";
-		headers = "";
-		html = "";
 	}
 
 	public String getResponse (String path) {
+		path = "root/" + path;
 		if (new File(path).exists()) {
 			statusCode = 200;
-			html = convertHtmlPageToString(path);
+			htmlString = convertHtmlPageToString(indexHtmlPath);
 		}
 		else {
 			statusCode = 404;
-			html = errorHtmlString;
+			htmlString = convertHtmlPageToString(errorHtmlPath);
 		}
 		statusMessage = getStatusMessageFromStatusCode(statusCode);
 
 		headers = "Date: " + new Date() + "\r\n" +
 				"Content-Type: text/html" + "\r\n" +
-				"Content-Length: " + html.length() + "\r\n"+
+				"Content-Length: " + htmlString.length() + "\r\n"+
 				"Connection: close";
 
 		String response = httpVersion + " " + statusCode + " " + statusMessage + "\r\n"
 				+ headers + "\r\n\r\n"
-				+ html;
+				+ htmlString;
 
 		return response;
 	}
@@ -59,10 +51,10 @@ public class HttpResponse {
 	String convertHtmlPageToString (String path) {
 		StringBuilder stringBuilder = new StringBuilder();
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(path)); // TODO: Change this to path
-			String str;
-			while ((str = in.readLine()) != null) {
-				stringBuilder.append(str + "\r\n");
+			BufferedReader in = new BufferedReader(new FileReader(path));
+			String aLine;
+			while ((aLine = in.readLine()) != null) {
+				stringBuilder.append(aLine + "\r\n");
 			}
 			in.close();
 		} catch (IOException ioException) {
