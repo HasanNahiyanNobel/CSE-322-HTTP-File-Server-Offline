@@ -36,16 +36,16 @@ public class Worker extends Thread {
 					}
 
 					request = startLine + "\n" + headers;
-
-					BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(LOG_FILE,true));
-					logFileWriter.write(request + "\n");
-					logFileWriter.close();
 				}
 				else {
 					break; // Get out of this loop and handle stuffs on a new thread.
 				}
 
 				String httpResponse = new HttpResponse(rootDirectoryPath).getResponse(path);
+
+				BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(LOG_FILE,true));
+				logFileWriter.write("REQUEST:\n" + request + "\nRESPONSE:\n" + httpResponse + "\n\n\n\n");
+				logFileWriter.close();
 
 				File requestedFile = new File(rootDirectoryPath + "/" + path);
 
