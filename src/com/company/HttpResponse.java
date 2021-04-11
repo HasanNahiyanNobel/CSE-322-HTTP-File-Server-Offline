@@ -13,7 +13,7 @@ public class HttpResponse {
 	String headers;
 	String htmlString;
 	final String indexHtmlPath = "index.html";
-	final String errorHtmlPath = "error_404.html";
+	final String errorHtmlPath = "error404.html";
 
 	public HttpResponse () {
 		httpVersion = "HTTP/1.1";
