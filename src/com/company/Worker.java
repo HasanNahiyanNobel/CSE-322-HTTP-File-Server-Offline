@@ -7,7 +7,8 @@ public class Worker extends Thread {
 	Socket socket;
 	int port;
 	String rootDirectoryPath;
-	boolean doWeNeedToScanHttpHeaders = false;
+	final String LOG_FILE = "log.txt";
+	final boolean DO_WE_NEED_TO_SCAN_HTTP_HEADERS = true;
 
 	public Worker (Socket socket, int port, String rootDirectoryPath) {
 		this.socket = socket;
@@ -29,15 +30,21 @@ public class Worker extends Thread {
 				String startLine = bufferedReader.readLine();
 
 				if (startLine!=null) {
+					BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(LOG_FILE));
+					logFileWriter.append(startLine + "\n");
+
 					String[] startLineContents = startLine.split(" ");
 					method = startLineContents[0];
 					path = startLineContents[1].substring(1); // Substring taken to remove the prefix slash from path.
 					httpVersion = startLineContents[2];
 
-					if (doWeNeedToScanHttpHeaders) {
+					if (DO_WE_NEED_TO_SCAN_HTTP_HEADERS) {
 						for (String headerLine=bufferedReader.readLine(); headerLine!=null && headerLine.length()>0; headerLine=bufferedReader.readLine()) {
 							header += headerLine;
+							logFileWriter.append(headerLine + "\n");
 						}
+						logFileWriter.append("\n"); // Just an extra line
+						logFileWriter.close();
 					}
 				}
 				else {
