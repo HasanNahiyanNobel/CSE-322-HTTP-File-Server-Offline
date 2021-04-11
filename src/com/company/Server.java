@@ -17,7 +17,7 @@ public class Server {
 			System.out.println("Connection established.");
 
 			// Open thread
-			Thread worker = new Worker(socket, PORT, ROOT_DIRECTORY_PATH);
+			Thread worker = new ServerWorker(socket, PORT, ROOT_DIRECTORY_PATH);
 			worker.start();
 			numberOfThreads++;
 			System.out.println("Opened thread #" + numberOfThreads + "\n");

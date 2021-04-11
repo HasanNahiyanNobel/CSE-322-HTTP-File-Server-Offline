@@ -11,7 +11,6 @@ public class Client {
 		final String HOST = "localhost";
 		final int PORT = 8080;
 		final String UPLOAD_COMMAND = "UPLOAD";
-		//String filePath = "Specification.pdf"; // TODO: Remove this.
 
 		Socket socket = new Socket(HOST,PORT);
 
@@ -40,7 +39,7 @@ public class Client {
 					System.out.println("Uploading " + filePath + "...\n");
 				}
 
-				Thread clientWorker = new ClientWorker(input);
+				Thread clientWorker = new ClientWorker(socket, filePath);
 				clientWorker.start();
 			} catch (IOException e) {
 				e.printStackTrace();

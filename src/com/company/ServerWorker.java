@@ -3,13 +3,13 @@ package com.company;
 import java.io.*;
 import java.net.Socket;
 
-public class Worker extends Thread {
+public class ServerWorker extends Thread {
 	Socket socket;
 	int port;
 	String rootDirectoryPath;
 	final String LOG_FILE = "log.txt";
 
-	public Worker (Socket socket, int port, String rootDirectoryPath) {
+	public ServerWorker (Socket socket, int port, String rootDirectoryPath) {
 		this.socket = socket;
 		this.port = port;
 		this.rootDirectoryPath = rootDirectoryPath;
@@ -28,6 +28,12 @@ public class Worker extends Thread {
 				String startLine = bufferedReader.readLine();
 
 				if (startLine!=null) {
+					// Check whether this is an upload request
+					if (!startLine.split(" ")[0].equals("GET")) {
+						System.out.println("An upload request came.");
+						continue;
+					}
+
 					String[] startLineContents = startLine.split(" ");
 					path = startLineContents[1].substring(1); // Substring taken to remove the prefix slash from path.
 
