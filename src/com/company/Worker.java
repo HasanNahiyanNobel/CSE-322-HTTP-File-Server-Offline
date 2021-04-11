@@ -50,7 +50,8 @@ public class Worker extends Thread {
 					// Write http headers
 					PrintWriter printWriter = new PrintWriter(socket.getOutputStream());
 					printWriter.print(httpResponse);
-					System.out.println(httpResponse);
+					System.out.println(httpResponse); //TODO: Remove this debug line.
+					printWriter.flush();
 					// Write the file
 					DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
 					FileInputStream fileInputStream = new FileInputStream(file);
@@ -59,8 +60,6 @@ public class Worker extends Thread {
 					while (fileInputStream.read(buffer) > 0) {
 						dataOutputStream.write(buffer);
 					}
-
-					printWriter.flush();
 					dataOutputStream.flush();
 					fileInputStream.close();
 				}
