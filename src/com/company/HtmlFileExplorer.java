@@ -9,9 +9,9 @@ public class HtmlFileExplorer {
 	String htmlStringAfterContents;
 
 	HtmlFileExplorer () {
-		htmlStringBeforeContents = "<!DOCTYPE html>\n<html>\n<body>\n";
+		htmlStringBeforeContents = "<!DOCTYPE html><html><body>";
 		contents = "";
-		htmlStringAfterContents = "</body>\n</html>";
+		htmlStringAfterContents = "</body></html>";
 	}
 
 	String getHtmlString (String path) {
@@ -22,10 +22,10 @@ public class HtmlFileExplorer {
 		else {
 			for (final File fileEntry : file.listFiles()) {
 				if (!fileEntry.isDirectory()) {
-					contents += fileEntry.getName() + "\n";
+					contents += fileEntry.getName() + "<br>";
 				}
 				else {
-					contents += "<a href=\""+ fileEntry.getPath() + "\">" + fileEntry.getName() + "</a>\n";
+					contents += "<a href=\""+ fileEntry.getPath() + "\">" + fileEntry.getName() + "</a><br>";
 				}
 			}
 		}

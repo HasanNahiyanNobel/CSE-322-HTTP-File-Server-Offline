@@ -21,9 +21,15 @@ public class HttpResponse {
 
 	public String getResponse (String path) {
 		path = "root/" + path;
-		if (new File(path).exists()) {
+		File file = new File(path);
+		if (file.exists()) {
 			statusCode = 200;
-			htmlString = convertHtmlPageToString(indexHtmlPath);
+			if (file.isDirectory()) {
+				htmlString = new HtmlFileExplorer().getHtmlString(path);
+			}
+			else {
+				htmlString = convertHtmlPageToString(indexHtmlPath); // TODO: Change this to make download.
+			}
 		}
 		else {
 			statusCode = 404;
