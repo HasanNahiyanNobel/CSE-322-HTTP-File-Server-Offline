@@ -30,8 +30,8 @@ public class Worker extends Thread {
 				String startLine = bufferedReader.readLine();
 
 				if (startLine!=null) {
-					BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(LOG_FILE));
-					logFileWriter.append(startLine + "\n");
+					BufferedWriter logFileWriter = new BufferedWriter(new FileWriter(LOG_FILE,true));
+					logFileWriter.write(startLine + "\n");
 
 					String[] startLineContents = startLine.split(" ");
 					method = startLineContents[0];
@@ -41,9 +41,9 @@ public class Worker extends Thread {
 					if (DO_WE_NEED_TO_SCAN_HTTP_HEADERS) {
 						for (String headerLine=bufferedReader.readLine(); headerLine!=null && headerLine.length()>0; headerLine=bufferedReader.readLine()) {
 							header += headerLine;
-							logFileWriter.append(headerLine + "\n");
+							logFileWriter.write(headerLine + "\n");
 						}
-						logFileWriter.append("\n"); // Just an extra line
+						logFileWriter.write("\n"); // Just an extra line
 						logFileWriter.close();
 					}
 				}
