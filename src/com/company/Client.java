@@ -1,6 +1,8 @@
 package com.company;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 public class Client {
@@ -16,8 +18,14 @@ public class Client {
 		System.out.println("Local port: " + socket.getLocalPort());
 
 		while (true) {
-			Thread clientWorker = new ClientWorker();
-			clientWorker.start();
+			BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+			try {
+				String input = bufferedReader.readLine();
+				Thread clientWorker = new ClientWorker(input);
+				clientWorker.start();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

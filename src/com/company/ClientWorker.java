@@ -3,11 +3,11 @@ package com.company;
 public class ClientWorker extends Thread {
 	String filePath;
 
-	ClientWorker () {
-
+	ClientWorker (String filePath) {
+		this.filePath = filePath;
 	}
 
 	public void run () {
-		System.out.println("Something is happening in thread.");
+		System.out.println("Hihi" + filePath);
 	}
 }
