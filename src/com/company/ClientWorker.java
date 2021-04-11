@@ -8,6 +8,6 @@ public class ClientWorker extends Thread {
 	}
 
 	public void run () {
-		System.out.println("Hihi" + filePath);
+
 	}
 }
